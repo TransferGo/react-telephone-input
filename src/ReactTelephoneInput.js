@@ -504,7 +504,10 @@ var ReactTelephoneInput = React.createClass({
         return (
             <div className={classNames('react-tel-input', this.props.classNames)}>
                 <input
-                    id={this.props.id}
+                    type="tel"
+                    autoComplete='tel'
+                    placeholder='+1 (702) 123-4567'
+                    {...this.props}
                     onChange={this.handleInput}
                     onClick={this.handleInputClick}
                     onFocus={this.handleInputFocus}
@@ -512,10 +515,8 @@ var ReactTelephoneInput = React.createClass({
                     onKeyDown={this.handleInputKeyDown}
                     value={this.state.formattedNumber}
                     ref="numberInput"
-                    type="tel"
                     className={inputClasses}
-                    autoComplete='tel'
-                    placeholder={this.props.placeholder}/>
+                />
                 <div ref='flagDropDownButton' className={flagViewClasses} onKeyDown={this.handleKeydown} >
                     <div ref='selectedFlag' onClick={this.handleFlagDropdownClick} className='selected-flag' title={`${this.state.selectedCountry.name}: + ${this.state.selectedCountry.dialCode}`}>
                         <div className={inputFlagClasses} style={this.getFlagStyle()}>
