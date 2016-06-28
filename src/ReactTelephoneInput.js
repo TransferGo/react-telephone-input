@@ -77,7 +77,6 @@ var ReactTelephoneInput = React.createClass({
         };
     },
     propTypes: {
-        id: React.PropTypes.string,
         value: React.PropTypes.string,
         placeholder: React.PropTypes.string,
         initialValue: React.PropTypes.string,
@@ -515,8 +514,7 @@ var ReactTelephoneInput = React.createClass({
                     onKeyDown={this.handleInputKeyDown}
                     value={this.state.formattedNumber}
                     ref="numberInput"
-                    className={inputClasses}
-                />
+                    className={inputClasses}/>
                 <div ref='flagDropDownButton' className={flagViewClasses} onKeyDown={this.handleKeydown} >
                     <div ref='selectedFlag' onClick={this.handleFlagDropdownClick} className='selected-flag' title={`${this.state.selectedCountry.name}: + ${this.state.selectedCountry.dialCode}`}>
                         <div className={inputFlagClasses} style={this.getFlagStyle()}>
