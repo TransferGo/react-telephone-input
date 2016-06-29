@@ -101,7 +101,8 @@ var ReactTelephoneInput = React.createClass({
             isValid: isNumberValid,
             flagsImagePath: 'flags.png',
             onEnterKeyPress: function () {},
-            preferredCountries: []
+            preferredCountries: [],
+            translations: []
         };
     },
     getNumber() {
@@ -509,6 +510,10 @@ var ReactTelephoneInput = React.createClass({
 
         var inputFlagClasses = `flag ${this.state.selectedCountry.iso2}`;
 
+        const selectedCountryName = this.props.translations[this.state.selectedCountry.iso2]
+            ? this.props.translations[this.state.selectedCountry.iso2]
+            : this.state.selectedCountry.name;
+
         return (
             <div className={classNames('react-tel-input', this.props.classNames)}>
                 <input
@@ -525,7 +530,7 @@ var ReactTelephoneInput = React.createClass({
                     ref="numberInput"
                     className={inputClasses}/>
                 <div ref='flagDropDownButton' className={flagViewClasses} onKeyDown={this.handleKeydown} >
-                    <div ref='selectedFlag' onClick={this.handleFlagDropdownClick} className='selected-flag' title={`${this.state.selectedCountry.name}: + ${this.state.selectedCountry.dialCode}`}>
+                    <div ref='selectedFlag' onClick={this.handleFlagDropdownClick} className='selected-flag' title={`${selectedCountryName}: +${this.state.selectedCountry.dialCode}`}>
                         <div className={inputFlagClasses} style={this.getFlagStyle()}>
                             <div className={arrowClasses}></div>
                         </div>
