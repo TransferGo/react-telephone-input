@@ -88,7 +88,8 @@ var ReactTelephoneInput = React.createClass({
         onChange: React.PropTypes.func,
         onEnterKeyPress: React.PropTypes.func,
         onBlur: React.PropTypes.func,
-        onFocus: React.PropTypes.func
+        onFocus: React.PropTypes.func,
+        translations: React.PropTypes.object,
     },
     getDefaultProps() {
         return {
@@ -432,12 +433,18 @@ var ReactTelephoneInput = React.createClass({
     getCountryDropDownList() {
 
         var countryDropDownList = map(this.state.preferredCountries.concat(this.props.onlyCountries), function(country, index) {
+            const countryCode = country.iso2;
+
             let itemClasses = classNames({
                 country: true,
-                preferred: country.iso2 === 'us' || country.iso2 === 'gb',
-                active: country.iso2 === 'us',
+                preferred: countryCode === 'us' || countryCode === 'gb',
+                active: countryCode === 'us',
                 highlight: this.state.highlightCountryIndex === index
             });
+
+            const countryName = this.props.translations[countryCode]
+                ? this.props.translations[countryCode]
+                : country.name;
 
             var inputFlagClasses = `flag ${country.iso2}`;
 
@@ -450,10 +457,8 @@ var ReactTelephoneInput = React.createClass({
                     data-dial-code="1"
                     data-country-code={country.iso2}
                     onClick={this.handleFlagItemClick.bind(this, country)}>
-                    <div
-                        className={inputFlagClasses}
-                        /*style={this.getFlagStyle()}*//>
-                    <span className='country-name'>{country.name}</span>
+                    <div className={inputFlagClasses} style={this.getFlagStyle()}/>
+                    <span className='country-name'>{countryName}</span>
                     <span className='dial-code'>{'+' + country.dialCode}</span>
                 </li>
             );
