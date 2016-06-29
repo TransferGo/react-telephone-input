@@ -8,7 +8,11 @@ var App = React.createClass({
     render() {
         return (
             <div>
-                <ReactTelephoneInput defaultCountry='us' preferredCountries={['us', 'ca', 'zz', 'hk']} />
+                <ReactTelephoneInput
+                    id="myElementId"
+                    defaultCountry='us'
+                    preferredCountries={['us', 'ca', 'zz', 'hk']}
+                    translations={{ 'us':'Amerika', 'lt':'Lietuva' }}/>
             </div>
         );
     }

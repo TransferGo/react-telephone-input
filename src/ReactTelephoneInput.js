@@ -78,6 +78,7 @@ var ReactTelephoneInput = React.createClass({
     },
     propTypes: {
         value: React.PropTypes.string,
+        placeholder: React.PropTypes.string,
         initialValue: React.PropTypes.string,
         autoFormat: React.PropTypes.bool,
         defaultCountry: React.PropTypes.string,
@@ -87,7 +88,8 @@ var ReactTelephoneInput = React.createClass({
         onChange: React.PropTypes.func,
         onEnterKeyPress: React.PropTypes.func,
         onBlur: React.PropTypes.func,
-        onFocus: React.PropTypes.func
+        onFocus: React.PropTypes.func,
+        translations: React.PropTypes.object,
     },
     getDefaultProps() {
         return {
@@ -99,7 +101,8 @@ var ReactTelephoneInput = React.createClass({
             isValid: isNumberValid,
             flagsImagePath: 'flags.png',
             onEnterKeyPress: function () {},
-            preferredCountries: []
+            preferredCountries: [],
+            translations: []
         };
     },
     getNumber() {
@@ -431,12 +434,18 @@ var ReactTelephoneInput = React.createClass({
     getCountryDropDownList() {
 
         var countryDropDownList = map(this.state.preferredCountries.concat(this.props.onlyCountries), function(country, index) {
+            const countryCode = country.iso2;
+
             let itemClasses = classNames({
                 country: true,
-                preferred: country.iso2 === 'us' || country.iso2 === 'gb',
-                active: country.iso2 === 'us',
+                preferred: countryCode === 'us' || countryCode === 'gb',
+                active: countryCode === 'us',
                 highlight: this.state.highlightCountryIndex === index
             });
+
+            const countryName = this.props.translations[countryCode]
+                ? this.props.translations[countryCode]
+                : country.name;
 
             var inputFlagClasses = `flag ${country.iso2}`;
 
@@ -449,16 +458,18 @@ var ReactTelephoneInput = React.createClass({
                     data-dial-code="1"
                     data-country-code={country.iso2}
                     onClick={this.handleFlagItemClick.bind(this, country)}>
-                    <div className={inputFlagClasses} style={this.getFlagStyle()} />
-                    <span className='country-name'>{country.name}</span>
+                    <div className={inputFlagClasses} style={this.getFlagStyle()}/>
+                    <span className='country-name'>{countryName}</span>
                     <span className='dial-code'>{'+' + country.dialCode}</span>
                 </li>
             );
         }, this);
 
-        const dashedLi = (<li key={"dashes"} className="divider" />);
-        // let's insert a dashed line in between preffered countries and the rest
-        countryDropDownList.splice(this.state.preferredCountries.length, 0, dashedLi);
+        if (this.state.preferredCountries.length) {
+            const dashedLi = (<li key={"dashes"} className="divider" />);
+            // let's insert a dashed line in between preffered countries and the rest
+            countryDropDownList.splice(this.state.preferredCountries.length, 0, dashedLi);
+        }
 
         const dropDownClasses = classNames({
             'country-list': true,
@@ -499,9 +510,17 @@ var ReactTelephoneInput = React.createClass({
 
         var inputFlagClasses = `flag ${this.state.selectedCountry.iso2}`;
 
+        const selectedCountryName = this.props.translations[this.state.selectedCountry.iso2]
+            ? this.props.translations[this.state.selectedCountry.iso2]
+            : this.state.selectedCountry.name;
+
         return (
             <div className={classNames('react-tel-input', this.props.classNames)}>
                 <input
+                    type="tel"
+                    autoComplete='tel'
+                    placeholder='+1 (702) 123-4567'
+                    {...this.props}
                     onChange={this.handleInput}
                     onClick={this.handleInputClick}
                     onFocus={this.handleInputFocus}
@@ -509,12 +528,9 @@ var ReactTelephoneInput = React.createClass({
                     onKeyDown={this.handleInputKeyDown}
                     value={this.state.formattedNumber}
                     ref="numberInput"
-                    type="tel"
-                    className={inputClasses}
-                    autoComplete='tel'
-                    placeholder='+1 (702) 123-4567'/>
+                    className={inputClasses}/>
                 <div ref='flagDropDownButton' className={flagViewClasses} onKeyDown={this.handleKeydown} >
-                    <div ref='selectedFlag' onClick={this.handleFlagDropdownClick} className='selected-flag' title={`${this.state.selectedCountry.name}: + ${this.state.selectedCountry.dialCode}`}>
+                    <div ref='selectedFlag' onClick={this.handleFlagDropdownClick} className='selected-flag' title={`${selectedCountryName}: +${this.state.selectedCountry.dialCode}`}>
                         <div className={inputFlagClasses} style={this.getFlagStyle()}>
                             <div className={arrowClasses}></div>
                         </div>
