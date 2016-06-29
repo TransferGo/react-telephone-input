@@ -450,16 +450,20 @@ var ReactTelephoneInput = React.createClass({
                     data-dial-code="1"
                     data-country-code={country.iso2}
                     onClick={this.handleFlagItemClick.bind(this, country)}>
-                    <div className={inputFlagClasses} style={this.getFlagStyle()} />
+                    <div
+                        className={inputFlagClasses}
+                        /*style={this.getFlagStyle()}*//>
                     <span className='country-name'>{country.name}</span>
                     <span className='dial-code'>{'+' + country.dialCode}</span>
                 </li>
             );
         }, this);
 
-        const dashedLi = (<li key={"dashes"} className="divider" />);
-        // let's insert a dashed line in between preffered countries and the rest
-        countryDropDownList.splice(this.state.preferredCountries.length, 0, dashedLi);
+        if (this.state.preferredCountries.length) {
+            const dashedLi = (<li key={"dashes"} className="divider" />);
+            // let's insert a dashed line in between preffered countries and the rest
+            countryDropDownList.splice(this.state.preferredCountries.length, 0, dashedLi);
+        }
 
         const dropDownClasses = classNames({
             'country-list': true,
